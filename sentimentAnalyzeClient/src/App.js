@@ -44,20 +44,23 @@ class App extends React.Component {
       url = url+"/text/sentiment?text="+document.getElementById("textinput").value;
     }
     ret = axios.get(url);
-    ret.then((response)=>{
+    ret.then((response) => {
+        let textColor = "black";
 
-      //Include code here to check the sentiment and fomrat the data accordingly
+        if (response.data === "positive") {
+            textColor = "green";
+        } else if (response.data === "neutral") {
+            textColor = "yellow";
+        } else if (response.data === "negative") {
+            textColor = "red";
+        }
 
-      this.setState({sentimentOutput:response.data});
-      let output = response.data;
-      if(response.data === "positive") {
-        output = <div style={{color:"green",fontSize:20}}>{response.data}</div>
-      } else if (response.data === "negative"){
-        output = <div style={{color:"red",fontSize:20}}>{response.data}</div>
-      } else {
-        output = <div style={{color:"orange",fontSize:20}}>{response.data}</div>
-      }
-      this.setState({sentimentOutput:output});
+        let output = <div style={{color:textColor,fontSize:20}}>{response.data}</div>;
+        this.setState({sentimentOutput: output});
+    })
+    .catch(err => {
+        let output = <div style={{color:"gray",fontSize:10}}>ERROR: {err.message}</div>;
+        this.setState({sentimentOutput: output});
     });
   }
 
@@ -74,7 +77,11 @@ class App extends React.Component {
 
     ret.then((response)=>{
       this.setState({sentimentOutput:<EmotionTable emotions={response.data}/>});
-  });
+    })
+    .catch(err => {
+        let output = <div style={{color:"gray",fontSize:10}}>ERROR: {err.message}</div>;
+        this.setState({sentimentOutput: output});
+    });
   }
   
 
