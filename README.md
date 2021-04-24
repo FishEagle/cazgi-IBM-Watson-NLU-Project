@@ -20,3 +20,4 @@
       API_KEY=<your api key>
       API_URL=<your url>
       ```
+   3. `npm start` starts it!
